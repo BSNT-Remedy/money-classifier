@@ -13,7 +13,7 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #ecececff;
             color: #fff;
         }
         nav {
@@ -40,8 +40,15 @@
         <h1>PesoScan</h1>
         <div class="nav-links">
             <a href="{% url 'main:index' %}">Home</a>
-            <a href="{% url 'main:analytics' %}">Analytics</a>
-            <a href="#">Logout</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'main:analytics' %}">Analytics</a>
+                <form method="post" action="{% url 'main:logout' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="link-button">Logout</button>
+                </form>
+            {% else %}
+                <a href="{% url 'main:login' %}">Login</a>
+            {% endif %}
         </div>
     </nav>
 

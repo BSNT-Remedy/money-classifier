@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 import json
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST, require_GET
@@ -13,8 +15,20 @@ def index(request):
 def analytics(request):
     return render(request, 'main/analytics.html')
 
+def register_view(request):
+    
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # automatically log in after registration
+            return redirect('main:index')
+    else:
+        form = UserCreationForm()
+    
+    return render(request, "main/register.html", {"form": form})
 
-
+@login_required
 @require_POST
 def save_prediction(request):
     """
@@ -31,7 +45,7 @@ def save_prediction(request):
     if not label:
         return HttpResponseBadRequest("Missing label")
 
-    user = request.user if request.user.is_authenticated else None
+    user = request.user
     pred = Prediction.objects.create(user=user, label=label, confidence=confidence)
     return JsonResponse({
         "status": "ok",
@@ -40,14 +54,17 @@ def save_prediction(request):
         "confidence": pred.confidence
     })
 
-
+@login_required
 @require_GET
 def predictions_stats(request):
     """
     Return JSON with counts per label and average confidence:
     { labels: [...], counts: [...], avg_confidence: {...} }
     """
-    qs = Prediction.objects.all()
+    if request.user == 'admin':
+        qs = Prediction.objects.all()
+    else:
+        qs = Prediction.objects.filter(user = request.user)
     # Optionally filter by date/user query params (not required)
     group = qs.values('label').annotate(count=Count('id'), avg_conf=Avg('confidence')).order_by('-count')
 
