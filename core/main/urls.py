@@ -12,4 +12,6 @@ urlpatterns = [
     path('analytics/', views.analytics, name='analytics'),
     path('save_prediction/', views.save_prediction, name='save_prediction'),
     path('api/predictions_stats/', views.predictions_stats, name='predictions_stats'),
+    path("about/", views.model_card, name="about"),
+    path("ethics/", views.ethics_statement, name="ethics"),
 ]

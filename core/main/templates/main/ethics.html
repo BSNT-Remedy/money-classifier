@@ -1,0 +1,66 @@
+{% extends "main/base.html" %}
+{% block content %}
+<div style="max-width: 800px; margin: auto; padding: 20px; color: #000;">
+
+    <h1>Ethics Statement</h1>
+    <hr>
+
+    <h2>1. Responsible Use</h2>
+    <p>
+        This machine learning model is an educational prototype. 
+        Users must be aware that predictions are not guaranteed to be accurate, 
+        and the application should not be used for real-world financial decisions or authentication.
+    </p>
+
+    <h2>2. Transparency</h2>
+    <p>
+        The system displays both prediction labels and confidence scores to ensure transparency. 
+        Users can view their aggregated analytics to better understand how the model behaves over time.
+    </p>
+
+    <h2>3. Privacy</h2>
+    <p>
+        Uploaded or captured images are used solely for generating model predictions. 
+        The application only stores:
+    </p>
+    <ul>
+        <li>The predicted label</li>
+        <li>The confidence score</li>
+        <li>The associated user account (if logged in)</li>
+    </ul>
+    <p>
+        No raw images or personal biometric data are stored on the server.
+    </p>
+
+    <h2>4. Data Usage</h2>
+    <p>
+        Prediction history is used for analytics purposes within the app. 
+        This allows users and administrators to understand usage patterns and model performance.
+    </p>
+
+    <h2>5. Limitations and Bias</h2>
+    <ul>
+        <li>The model may exhibit bias due to the limited dataset used for training.</li>
+        <li>Environmental factors such as lighting or camera quality may affect predictions.</li>
+        <li>Results should not be interpreted as absolute truth.</li>
+    </ul>
+
+    <h2>6. User Safety</h2>
+    <p>
+        The app avoids making harmful or misleading claims. It is the user's responsibility 
+        to ensure they do not rely on the model for sensitive or high-risk applications.
+    </p>
+
+    <h2>7. Commitments</h2>
+    <p>
+        The developers are committed to:
+    </p>
+    <ul>
+        <li>Improving accuracy responsibly</li>
+        <li>Maintaining transparency on how predictions are made</li>
+        <li>Ensuring the model remains an educational tool</li>
+        <li>Preventing misuse or misinterpretation</li>
+    </ul>
+
+</div>
+{% endblock %}

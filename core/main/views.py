@@ -15,6 +15,12 @@ def index(request):
 def analytics(request):
     return render(request, 'main/analytics.html')
 
+def model_card(request):
+    return render(request, "main/about.html")
+
+def ethics_statement(request):
+    return render(request, "main/ethics.html")
+
 def register_view(request):
     
     if request.method == "POST":
@@ -61,7 +67,7 @@ def predictions_stats(request):
     Return JSON with counts per label and average confidence:
     { labels: [...], counts: [...], avg_confidence: {...} }
     """
-    if request.user == 'admin':
+    if request.user.is_superuser:
         qs = Prediction.objects.all()
     else:
         qs = Prediction.objects.filter(user = request.user)
