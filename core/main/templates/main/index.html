@@ -1,23 +1,63 @@
+{% extends "main/base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Teachable Machine with p5.js</title>
+{% block title %}Teachable Machine with p5.js{% endblock %}
 
-  <script src="{% static 'main/p5.min.js' %}"></script>
-  <script src="{% static 'main/ml5.min.js' %}"></script>
-</head>
-<body>
+{% block head %}
+    <script src="{% static 'main/p5.min.js' %}"></script>
+    <script src="{% static 'main/ml5.min.js' %}"></script>
+
+    <style>
+        {% comment %} body {
+            font-family: Arial, sans-serif;
+            background-color: #222;
+            color: #fff;
+        } {% endcomment %}
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            justify-content: center;
+            align-items: center;
+        }
+
+        video {
+            border: 3px solid #fff;
+            border-radius: 8px;
+            margin: 20px;
+        }
+
+        .prediction {
+            margin-top: 10px;
+            font-size: 20px;
+            background-color: rgba(0,0,0,0.5);
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+{% endblock head %}
+
+{% block content %}
+    <div class="main-content">
+        <video id="video" width="320" height="240" autoplay muted></video>
+        <div class="prediction">
+            <p id="label">Prediction: waiting...</p>
+            <p id="confidence">Confidence: 0%</p>
+        </div>
+    </div>
+
     <script>
-        let video;
-        let label = "waiting...";
+        let video = document.getElementById("video");
+        let label = document.getElementById("label");
+        let confidence = document.getElementById("confidence");
         let classifier;
 
         let modelURL = "{% static 'main/model.json' %}";
 
-        function setup() {
-        createCanvas(320, 240);
+        {% comment %} function setup() {
+        createCanvas(320, 300);
         video = createCapture(VIDEO);
         video.size(320, 240);
         video.hide();
@@ -26,26 +66,45 @@
             console.log("Model loaded!");
             classifyVideo();
         });
-        }
+        } {% endcomment %}
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => video.srcObject = stream)
+        .catch(err => console.error(err));
+
+        classifier = ml5.imageClassifier(modelURL, video, () => {
+            console.log("Model loaded!");
+            classifyVideo();
+        });
 
         function classifyVideo() {
-        if (classifier) classifier.classify(gotResults);
+            classifier.classify(video, (error, results) => {
+                if (error) return console.error(error);
+                label.innerText = `Prediction: ${results[0].label}`;
+                confidence.innerText = `Confidence: ${(results[0].confidence * 100).toFixed(0)}%`;
+                classifyVideo();
+            });
         }
 
-        function draw() {
+        {% comment %} function classifyVideo() {
+        if (classifier) classifier.classify(gotResults);
+        } {% endcomment %}
+
+        {% comment %} function draw() {
         background(0);
         image(video, 0, 0);
-        textSize(24);
+        textSize(20);
         textAlign(CENTER, CENTER);
         fill(255);
-        text(label || "Waiting...", width / 2, height - 20);
-        }
+        text("Prediction: " + (label || "Waiting..."), width / 2, height - 40);
+        text("Confidence: " + ((confidence * 100).toFixed(0) + "%") || "0%", width / 2, height - 20);
+        } {% endcomment %}
 
-        function gotResults(error, results) {
+        {% comment %} function gotResults(error, results) {
         if (error) return console.error(error);
         label = results[0].label;
+        confidence = results[0].confidence;
         classifyVideo();
-        }
+        } {% endcomment %}
     </script>
-</body>
-</html>
+{% endblock %}

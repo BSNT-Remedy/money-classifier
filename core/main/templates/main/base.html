@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+
+    {% block head %}
+    
+    {% endblock head %}
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #fff;
+        }
+        nav {
+            background-color: #333;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        h1 {
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>PesoScan</h1>
+        <div class="nav-links">
+            <a href="{% url 'main:index' %}">Home</a>
+            <a href="{% url 'main:analytics' %}">Analytics</a>
+            <a href="#">Logout</a>
+        </div>
+    </nav>
+
+    {% block content %}
+        
+    {% endblock %}
+</body>
+</html>
