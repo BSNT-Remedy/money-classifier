@@ -9,12 +9,69 @@
             color: #000;
         }
     </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock head %}
 
 {% block content %}
     <div class="analytics-container">
-        <h2 style="padding-left: 10px;">Analytics Page</h2>
-        <p style="padding-left: 10px;">This is where analytics data will be displayed.</p>
+        <h1>Analytics</h1>
+        <p>Total saved predictions: <span id="total">0</span></p>
+        <canvas id="barChart"></canvas>
+        <h3>Average confidence per class</h3>
+        <ul id="avgConfList"></ul>
     </div>
     
+    <script>
+        async function fetchAnalytics() {
+            const response = await fetch('/api/predictions_stats/');
+            const data = await response.json();
+            return data;
+        }
+
+        function renderBarChart(labels, counts) {
+            const ctx = document.getElementById('barChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Predictions',
+                        data: counts,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderAvgConfidence(avgConfData) {
+            const avgConfList = document.getElementById('avgConfList');
+            for (const item in avgConfData) {
+                console.log('item:', item);
+                console.log('avg_confidence:', avgConfData[item]);
+                const li = document.createElement('li');
+                li.textContent = `${item}: ${avgConfData[item].toFixed(2)}%`;
+                avgConfList.appendChild(li);
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const analyticsData = await fetchAnalytics();
+            console.log(analyticsData);
+            document.getElementById('total').innerText = analyticsData.total;
+            renderBarChart(
+                analyticsData.labels.map(label => label),
+                analyticsData.counts.map(count => count)
+            );
+            console.log(analyticsData.avg_confidence);
+            renderAvgConfidence(analyticsData.avg_confidence);
+        });
+    </script>
 {% endblock %}
