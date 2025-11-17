@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: pesoscan
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn myproject.wsgi --log-file -
+    envVars:
+      - key: DEBUG
+        value: 'False'

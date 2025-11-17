@@ -1,0 +1,6 @@
+Django
+gunicorn
+Pillow
+tensorflow-cpu
+numpy
+whitenoise
