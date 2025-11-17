@@ -1,19 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #121212;
+      color: #f0f0f0;
+    }
+
+    .register-container {
+      background-color: #1e1e1e;
+      padding: 40px 35px;
+      border-radius: 15px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #f0f0f0;
+      margin-bottom: 30px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      text-align: left;
+    }
+
+    label {
+      font-weight: 500;
+      margin-bottom: 5px;
+      display: block;
+      color: #ccc;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 15px;
+      border: 1px solid #444;
+      border-radius: 10px;
+      background: #121212;
+      color: #f0f0f0;
+      transition: all 0.3s ease;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #f0f0f0;
+      box-shadow: 0 0 8px rgba(240, 240, 240, 0.3);
+    }
+
+    .password-rules {
+      font-size: 13px;
+      color: #aaa;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .password-rules li {
+      margin-bottom: 5px;
+    }
+
+    button {
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #f0f0f0;
+      color: #121212;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background: #d4d4d4;
+      transform: translateY(-2px);
+    }
+
+    .links {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    .links a {
+      color: #f0f0f0;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
-    <h2>Register</h2>
+  <div class="register-container">
+    <h2>Create Account</h2>
     <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Register</button>
     </form>
-    <p>Already have an account? <a href="{% url 'main:login' %}">Login</a></p>
 
-    <p>Continue as <a href="{% url 'main:index' %}">Guest</a></p>
+    <div class="links">
+      <p>Already have an account? <a href="{% url 'main:login' %}">Login</a></p>
+      <p>Continue as <a href="{% url 'main:index' %}">Guest</a></p>
+    </div>
+  </div>
 </body>
 </html>

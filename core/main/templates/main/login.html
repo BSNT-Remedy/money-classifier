@@ -1,19 +1,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: #121212;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        color: #f0f0f0;
+    }
+
+    .login-container {
+        background: #1e1e1e;
+        padding: 40px 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        width: 360px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .login-container:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 28px;
+        color: #f0f0f0;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        border: 1px solid #444;
+        background: #121212;
+        color: #f0f0f0;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+    input:focus {
+        border-color: #f0f0f0;
+        box-shadow: 0 0 8px rgba(240,240,240,0.2);
+        outline: none;
+    }
+
+    button {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        background: #f0f0f0;
+        color: #121212;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    button:hover {
+        background: #d4d4d4;
+    }
+
+    .links {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+    .links a {
+        color: #f0f0f0;
+        font-weight: 500;
+        text-decoration: none;
+    }
+
+    .links a:hover {
+        text-decoration: underline;
+    }
+    form p {
+    margin: 0 0 15px 0; 
+    }
+
+input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #121212;
+    color: #f0f0f0;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+button {
+    margin-top: 10px; 
+}
+</style>
 </head>
 <body>
+<div class="login-container">
     <h2>Login</h2>
     <form method="POST">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Login</button>
     </form>
-    <p>Don't have an account? <a href="{% url 'main:register' %}">Register</a></p>
-
-    <p>Continue as <a href="{% url 'main:index' %}">Guest</a></p>
+    <div class="links">
+        <p>Don't have an account? <a href="{% url 'main:register' %}">Register</a></p>
+        <p>Continue as <a href="{% url 'main:index' %}">Guest</a></p>
+    </div>
+</div>
 </body>
 </html>
