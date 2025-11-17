@@ -3,6 +3,7 @@ services:
     name: pesoscan
     env: python
     plan: starter
+    rootDir: core
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn core.wsgi:application --log-file -
     envVars:
