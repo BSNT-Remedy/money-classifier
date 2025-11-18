@@ -38,6 +38,17 @@
             padding: 10px;
             border-radius: 5px;
         }
+
+        @media (max-width: 480px) {
+            body {
+                max-height: 100vh;
+            }
+
+            video {
+                width: 90%;
+                height: auto;
+            }
+        }
     </style>
 {% endblock head %}
 
@@ -51,6 +62,9 @@
             {% endif %}
         </div>
         <video id="video" width="640" height="480" autoplay muted></video>
+
+        <button id="switchCam" class="switch-btn">Switch Camera</button>
+
         <div class="prediction">
             <p>Prediction: <span id="label">waiting...</span></p>
             <p>Confidence: <span id="confidence">0</span>%</p>
@@ -65,17 +79,60 @@
         let label = document.getElementById("label");
         let confidence = document.getElementById("confidence");
         let classifier;
+        let currentDeviceIndex = 0;
+        let videoDevices = [];
 
         let modelURL = "{% static 'main/model.json' %}";
 
-        navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => video.srcObject = stream)
-        .catch(err => console.error(err));
+        async function getVideoDevices() {
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            videoDevices = devices.filter(device => device.kind === "videoinput");
+        }
 
-        classifier = ml5.imageClassifier(modelURL, video, () => {
+        async function startCamera(deviceId) {
+            if (video.srcObject) {
+                video.srcObject.getTracks().forEach(track => track.stop());
+            }
+
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { deviceId: deviceId ? { exact: deviceId } : undefined }
+            });
+            video.srcObject = stream;
+
+            // wait for video to load before starting classifier
+            return new Promise(resolve => {
+                video.onloadedmetadata = () => {
+                    video.play();
+                    resolve();
+                };
+            });
+        }
+
+        async function init() {
+            await getVideoDevices();
+            await startCamera(videoDevices[currentDeviceIndex]?.deviceId);
+
+            classifier = ml5.imageClassifier("{% static 'main/model.json' %}", video, () => {
+                console.log("Model loaded!");
+                classifyVideo();
+            });
+        }
+
+        document.getElementById("switchCam").addEventListener("click", async () => {
+            currentDeviceIndex = (currentDeviceIndex + 1) % videoDevices.length;
+            await startCamera(videoDevices[currentDeviceIndex].deviceId);
+        });
+
+        init();
+
+        {% comment %} navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => video.srcObject = stream)
+        .catch(err => console.error(err)); {% endcomment %}
+
+        {% comment %} classifier = ml5.imageClassifier(modelURL, video, () => {
             console.log("Model loaded!");
             classifyVideo();
-        });
+        }); {% endcomment %}
 
         function classifyVideo() {
             classifier.classify(video, (error, results) => {
